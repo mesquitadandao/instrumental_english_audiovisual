@@ -1,1 +1,5 @@
-console.log('This would be the main JS file.');
+$(function(){
+	$("#extract-unique-words").on("click.extract", function(){
+		
+	});
+});

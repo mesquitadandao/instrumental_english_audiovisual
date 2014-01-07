@@ -12,49 +12,53 @@
 	uniq();
 };
 
-var Translation = function() {
-	this.HOST = 'http://api.microsofttranslator.com/v2/ajax.svc/TranslateArray2';
-	this.APPID = 'THxUiA69g9O-X27g2Er6pTPh_G4-yOmfeNGwVI4ISTDc*';
-	this.WORDS = [];
-	this.TEXTS = null;
-	this.FROM = 'en';
-	this.TRANSLATING = false;
+var Translator = function(){
+	var _host = 'http://api.microsofttranslator.com/v2/ajax.svc/TranslateArray2';
+	var _appID = 'TU58_reVVTYOQfH94UXRZxbUpxXRFOT7aLDzG1eOBgM0*';
+	var _script = 'HOST?appId=APPID&oncomplete=_T_._continue&onerror=_T_._break&texts=TEXTS&from=FROM&to=TO';
+	var _words = [];
+	var _texts = null;
+	var _from = 'en';
+	var _to;
+	var _translating = false;
 
 	this.words = function(words){
-		this.TEXTS = '["'+words.join('","')+'"]';
-		this.WORDS = words;
+		_texts = '["'+words.join('","')+'"]';
+		_words = words;
 		return this;
 	};
 
 	this.from = function(languageCode){
-		this.FROM = languageCode;
+		_from = languageCode;
 		return this;
 	};
 
 	this.to = function(languageCode){
-		var script = 'HOST?appId=APPID&oncomplete=TRANSLATION._continue&onerror=TRANSLATION._break&texts=TEXTS&from=FROM&to=TO'.
-		gsub(/HOST/, this.HOST).gsub(/APPID/, this.APPID).gsub(/TEXTS/, this.TEXTS).
-		gsub(/FROM/, this.FROM).gsub(/TO/, languageCode);
-		this.TRANSLATING = true;
+		_to = languageCode;
+		var script = _script.gsub(/HOST/, _host).gsub(/APPID/, _appID).
+		gsub(/TEXTS/, _texts).gsub(/FROM/, _from).gsub(/TO/, _to);
+		_translating = true;
 		$.getScript(script);
 	};
 
 	this._continue = function(response){
 		var translations = [];
 		for(var i = 0; i < response.length; i++){
-			translations.push({"origin":this.WORDS[i], "translation":response[i].TranslatedText.toLowerCase()});
+			translations.push({"origin": _words[i], "translation":response[i].TranslatedText.toLowerCase()});
 		}
-		this.success(translations);
-		this.TRANSLATING = false;
+		this.completed(translations);
+		_translating = false;
 	};
 
 	this._break = function(response){
-		this.fail();
-		this.TRANSLATING = false;
+		this.completed([]);
+		_translating = false;
 	};
 
 	this.translating = function(){
-		return this.TRANSLATING;
+		return _translating;
 	};
 }
-var TRANSLATION = new Translation();
+
+var _T_ = new Translator();
+var TRANSLATOR = _T_;

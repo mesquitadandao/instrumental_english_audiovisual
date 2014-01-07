@@ -44,7 +44,13 @@ var MDTranslator = function(){
 	this._continue = function(response){
 		var translations = [];
 		for(var i = 0; i < response.length; i++){
-			translations.push({"origin":{"text":_words[i],"audio":function(){return MDA.build(_from,_words[i]);}},"translation":{"text":response[i].TranslatedText.toLowerCase(),"audio":function(){return new MDA.build(_to,response[i].TranslatedText.toLowerCase());}}});
+			var originText = _words[i];
+			var originLang = _from;
+			var originAudio = MDA.build(originLang,originText);
+			var translationText = response[i].TranslatedText.toLowerCase();
+			var translationLang = _to;
+			var translationAudio = MDA.build(translationLang,translationText);
+			translations.push({"origin":{"text":originText,"audio": originAudio},"translation":{"text":translationText,"audio": translationAudio}});
 		}
 		this.completed(translations);
 		_translating = false;
@@ -65,7 +71,7 @@ var MDAudio = function(appID){
 						appID + "&language=LANGUAGE&text=TEXT";
 
 	this.build = function(language, text){
-		return new Audio(_src.gsub(/LANGUAGE/,language).gsub(/TEXT/, text));
+		return function() { return new Audio(_src.gsub(/LANGUAGE/,language).gsub(/TEXT/, text));};
 	};
 }
 

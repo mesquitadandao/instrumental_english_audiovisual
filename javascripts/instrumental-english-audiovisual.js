@@ -12,10 +12,10 @@
 	uniq();
 };
 
-var Translator = function(){
+var MDTranslator = function(){
+	this.appID = 'TU58_reVVTYOQfH94UXRZxbUpxXRFOT7aLDzG1eOBgM0*';
 	var _host = 'http://api.microsofttranslator.com/v2/ajax.svc/TranslateArray2';
-	var _appID = 'TU58_reVVTYOQfH94UXRZxbUpxXRFOT7aLDzG1eOBgM0*';
-	var _script = 'HOST?appId=APPID&oncomplete=_T_._continue&onerror=_T_._break&texts=TEXTS&from=FROM&to=TO';
+	var _script = 'HOST?appId=APPID&oncomplete=MDT._continue&onerror=MDT._break&texts=TEXTS&from=FROM&to=TO';
 	var _words = [];
 	var _texts = null;
 	var _from = 'en';
@@ -35,7 +35,7 @@ var Translator = function(){
 
 	this.to = function(languageCode){
 		_to = languageCode;
-		var script = _script.gsub(/HOST/, _host).gsub(/APPID/, _appID).
+		var script = _script.gsub(/HOST/, _host).gsub(/APPID/, this.appID).
 		gsub(/TEXTS/, _texts).gsub(/FROM/, _from).gsub(/TO/, _to);
 		_translating = true;
 		$.getScript(script);
@@ -44,7 +44,7 @@ var Translator = function(){
 	this._continue = function(response){
 		var translations = [];
 		for(var i = 0; i < response.length; i++){
-			translations.push({"origin": _words[i], "translation":response[i].TranslatedText.toLowerCase()});
+			translations.push({"origin":{"text":_words[i],"audio":function(){return MDA.build(_from,_words[i]);}},"translation":{"text":response[i].TranslatedText.toLowerCase(),"audio":function(){return new MDA.build(_to,response[i].TranslatedText.toLowerCase());}}});
 		}
 		this.completed(translations);
 		_translating = false;
@@ -60,5 +60,14 @@ var Translator = function(){
 	};
 }
 
-var _T_ = new Translator();
-var TRANSLATOR = _T_;
+var MDAudio = function(appID){
+	var _src = "http://api.microsofttranslator.com/v2/http.svc/Speak?format=audio/mp3&options=MaxQuality&appid="+
+						appID + "&language=LANGUAGE&text=TEXT";
+
+	this.build = function(language, text){
+		return new Audio(_src.gsub(/LANGUAGE/,language).gsub(/TEXT/, text));
+	};
+}
+
+var MDT = new MDTranslator();
+var MDA = new MDAudio(MDT.appID);

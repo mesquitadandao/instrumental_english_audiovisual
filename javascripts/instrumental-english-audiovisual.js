@@ -13,7 +13,7 @@
 };
 
 var MDTranslator = function(){
-	this.appID = 'TU58_reVVTYOQfH94UXRZxbUpxXRFOT7aLDzG1eOBgM0*';
+	// http://msdn.microsoft.com/en-us/library/ff512407.aspx
 	var _host = 'http://api.microsofttranslator.com/v2/ajax.svc/TranslateArray2';
 	var _script = 'HOST?appId=APPID&oncomplete=MDT._continue&onerror=MDT._break&texts=TEXTS&from=FROM&to=TO';
 	var _words = [];
@@ -35,7 +35,7 @@ var MDTranslator = function(){
 
 	this.to = function(languageCode){
 		_to = languageCode;
-		var script = _script.gsub(/HOST/, _host).gsub(/APPID/, this.appID).
+		var script = _script.gsub(/HOST/, _host).gsub(/APPID/, window._mstConfig.appId).
 		gsub(/TEXTS/, _texts).gsub(/FROM/, _from).gsub(/TO/, _to);
 		_translating = true;
 		$.getScript(script);
@@ -67,13 +67,15 @@ var MDTranslator = function(){
 }
 
 var MDAudio = function(appID){
-	var _src = "http://api.microsofttranslator.com/v2/http.svc/Speak?format=audio/mp3&options=MaxQuality&appid="+
-						appID + "&language=LANGUAGE&text=TEXT";
+	// http://msdn.microsoft.com/en-us/library/ff512405.aspx
+	var _src = "http://api.microsofttranslator.com/v2/http.svc/Speak?format=audio/mp3&options=MaxQuality&appid=APPID&language=LANGUAGE&text=TEXT";
 
 	this.build = function(language, text){
-		return function() { return new Audio(_src.gsub(/LANGUAGE/,language).gsub(/TEXT/, text));};
+		return function() { return new Audio(_src.gsub(/APPID/, window._mstConfig.appId).
+			gsub(/LANGUAGE/, language).gsub(/TEXT/, text));};
 	};
 }
 
+$.getScript('http://www.microsofttranslator.com/Ajax/V2/Toolkit.ashx');
 var MDT = new MDTranslator();
 var MDA = new MDAudio(MDT.appID);

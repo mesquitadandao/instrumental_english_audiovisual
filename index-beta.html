@@ -8,7 +8,7 @@
 	<meta name="author" content="Mesquita Dandão">
 	<link rel="shortcut icon" href="img/favicon.ico">
 
-	<title>Instrumental English Audiovisual</title>
+	<title translate="no">Instrumental English Audiovisual</title>
 
 	<!-- Bootstrap core CSS -->
 	<link href="css/bootstrap.min.css" rel="stylesheet">
@@ -24,11 +24,13 @@
 </head>
 <body>
 
-	<div id='MicrosoftTranslatorWidget' class='Dark'></div>
+	<div class="row">
+		<div id='MicrosoftTranslatorWidget' class='Dark navbar-fixed-top'></div>
+	</div>
 
 	<div class="row center-block">
 		<div class="jumbotron text-center">
-			<h1>Instrumental English Audiovisual</h1>
+			<h1 translate="no">Instrumental English Audiovisual</h1>
 			<p class="lead">For you who need to read technically texts in the english language, perfecting your english in pronunciation and translation, but do not want to pay  vocabularies or have effort to search between several words. The <strong translate="no">Instrumental English Audiovisual</strong> is a vocabulary english free for your language. Unlike other with several words to search, it only generates the translation and pronunciation of single words of the text that you will read.</p>
 			<p><a class="btn btn-lg btn-primary" href="#" role="button" data-toggle="modal" data-target="#myModal">Begin Now</a></p>
 		</div>
@@ -57,24 +59,16 @@
 	</form>
 	</div>
 
-	<div class="row hidden">
-		<table id="your-vocabulary" class="table table-responsive table-hover table-striped">
-			<caption><h2>Your Vocabulary</h2></caption>
+	<div id="your-vocabulary-div" class="container">
+		<table class="table table-responsive table-hover">
+			<caption><h2><button class="btn btn-default glyphicon glyphicon-play play-all"></button> Your Vocabulary</h2></caption>
 			<thead>
 				<tr>
-					<th><h3>Origin</h3></th>
-					<th><h3>Translation</h3></th>
+					<th><h3><button class="btn btn-default glyphicon glyphicon-play play-origin-all"></button> Original</h3></th>
+					<th><h3><button class="btn btn-default glyphicon glyphicon-play play-translation-all"></button> Translation</h3></th>
 				</tr>
 			</thead>
-			<tbody>
-				<tr>
-					<td><h4>xyz</h4></td>
-					<td><h4>xyz</h4></td>
-				</tr>
-				<tr>
-					<td><h4>xyz</h4></td>
-					<td><h4>xyz</h4></td>
-				</tr>
+			<tbody translate="no" id="your-vocabulary-body">
 			</tbody>
 		</table>
 	</div>
@@ -82,7 +76,7 @@
 
 	<footer class="container">
 		<p class="pull-right"><a href="#">Back to top</a></p>
-		<p>&copy; 2014 <a translate="no" class="change-element" target="_blank" href="http://mesquitadandao.github.io/">Mesquita Dandão</a>. &middot; <a href="#">Public Domain (Unlicense)</a> &middot; Published with <a translate="no" class="change-element" target="_blank" href="http://pages.github.com">GitHub Pages</a></p>
+		<p>&copy; 2014 <a translate="no" class="change-element" target="_blank" href="http://mesquitadandao.github.io/">Mesquita Dandão</a>. &middot; <a translate="no" href="#">Public Domain (Unlicense)</a> &middot; Published with <a translate="no" class="change-element" target="_blank" href="http://pages.github.com">GitHub Pages</a></p>
 	</footer>
 
 

@@ -76,6 +76,6 @@ var MDAudio = function(appID){
 	};
 }
 
-$.getScript('http://www.microsofttranslator.com/Ajax/V2/Toolkit.ashx');
+//$.getScript('http://www.microsofttranslator.com/Ajax/V2/Toolkit.ashx');
 var MDT = new MDTranslator();
 var MDA = new MDAudio(MDT.appID);

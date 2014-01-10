@@ -1,8 +1,12 @@
 $(function(){
+	var $beginNow = $('#begin-now');
 	var $yourText = $("#your-text");
 	var $yourVocabularyDiv = $("#your-vocabulary-div");
 	var $yourVocabularyBody = $("#your-vocabulary-body");
 	var lastTranslations = [];
+
+	var $progressTranslation = $("#progress-translation");
+	var $errorTranslation = $("#error-translation");
 
 	var applyAudio = function(){
 		$(".play-origin, .play-translation").off("click.play").on("click.play", function(){
@@ -89,6 +93,8 @@ next();};
 	};
 
 	MDTranslator.prototype.completed = function(translations){
+		$progressTranslation.addClass('hidden');
+		$beginNow.attr('disabled', false);
 		if(translations.length > 0){
 			lastTranslations = translations;
 			for(var i = 0; i < lastTranslations.length; i++){
@@ -99,15 +105,18 @@ next();};
 			applyNextKey('translation');
 			applyNextAll();
 			$yourText.val("");
-			$yourVocabularyDiv.removeClass('hidden');
 		}else{
-			alert('Error');
+			var $errorTranslationClone = $errorTranslation.clone();
+			$errorTranslationClone.removeClass('hidden');
+			$errorTranslationClone.appendTo($errorTranslation.parent());
 		}
 	};
 
 	$('#form-your-text').on("submit.generate-your-vacabulary", function(){
 		$("#myModal").modal("hide");
 		$yourVocabularyBody.empty();
+		$progressTranslation.removeClass('hidden');
+		$beginNow.attr('disabled', true);
 		var extrateds = $yourText.val().extractUniqueWordsEnglish();
 		MDT.words(extrateds).to("pt");
 	});

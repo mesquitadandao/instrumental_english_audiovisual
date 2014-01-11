@@ -23,6 +23,7 @@ $(function(){
 				audio.onended = function(){$this.attr('disabled',null).removeClass('glyphicon-volume-up').addClass('glyphicon-play');$parent.removeClass('success');
 next();};
 			}
+			audio.onerror = function(){this.onended();};
 			audio.play();
 		});
 	}

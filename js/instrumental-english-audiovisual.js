@@ -66,6 +66,28 @@ var MDTranslator = function(){
 	};
 }
 
+Audio.prototype.defaultPlay = Audio.prototype.play;
+Audio.prototype.playing = false;
+Audio.prototype.play = function(limitRepeat){
+	if(limitRepeat){
+		if(limitRepeat === 2){
+			this.loop = true;
+			this.onseeked = function(){ this.loop = false; };
+		}else if (limitRepeat > 2){
+			var played = 1;
+			this.loop = true;
+			this.onseeked = function(){ this.loop = played++ < limitRepeat; };
+		}
+	}else{
+		this.loop = true;
+	}
+	this.playing = true;
+	this.defaultPlay();		
+};
+Audio.prototype.stop = function(){
+	this.loop = false;
+};
+
 var MDAudio = function(appID){
 	// http://msdn.microsoft.com/en-us/library/ff512405.aspx
 	var _src = "http://api.microsofttranslator.com/v2/http.svc/Speak?format=audio/mp3&options=MaxQuality&appid=APPID&language=LANGUAGE&text=TEXT";

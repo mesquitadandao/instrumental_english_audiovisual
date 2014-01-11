@@ -4,50 +4,58 @@ $(function(){
 	var $yourVocabularyDiv = $("#your-vocabulary-div");
 	var $yourVocabularyBody = $("#your-vocabulary-body");
 	var lastTranslations = [];
+	var limitRepeat = null;
 
 	var $progressTranslation = $("#progress-translation");
 	var $errorTranslation = $("#error-translation");
 
+	var iconPlay = "glyphicon-play";
+	var iconStop = "glyphicon-stop";
+
 	var applyAudio = function(){
-		$(".play-origin, .play-translation").off("click.play").on("click.play", function(){
+		$(".play").off("click.play").on("click.play", function(){
 			var $this = $(this);
-			var $parent = $this.parent().parent();
-			var index = $parent.data('index');
-			var key = $parent.data('key');
-			var myClassPlay = 'play-'+ key;
-			$this.removeClass(myClassPlay);
-			var outherPlays = $(".play-origin, .play-translation, #play-origin-all, #play-translation-all, #play-all");
+			var index = $this.data('index');
+			var key = $this.data('key');
+			var $parentTD = $this.closest("td");
+			$this.removeClass("play");
+			var outherPlays = $(".play, #play-origin, #play-translation, #play-all");
 			outherPlays.attr('disabled', 'disabled');
-			$parent.addClass('success');
-			$this.removeClass('glyphicon-play').addClass('glyphicon-stop');
+			$parentTD.addClass('success');
+			$this.removeClass(iconPlay).addClass(iconStop);
 			if (!(lastTranslations[index][key].audio instanceof HTMLAudioElement)){
-				 lastTranslations[index][key].audio = lastTranslations[index][key].audio();
+				lastTranslations[index][key].audio = lastTranslations[index][key].audio();
 			}
 			var audio = lastTranslations[index][key].audio;
-			var next = lastTranslations[index][key].next || function(){};
-			if (next instanceof Next){
-				audio.onended = function(){
-					$this.removeClass('glyphicon-stop').addClass('glyphicon-play');
-					$parent.removeClass('success');
-					outherPlays.attr('disabled', null);
-					$this.addClass(myClassPlay);
-					next.exec();
-				};
+			if (!audio.playing){
+				var next = lastTranslations[index][key].next || function(){};
+				if (next instanceof Next){
+					audio.onended = function(){
+						$this.removeClass(iconStop).addClass(iconPlay);
+						$parentTD.removeClass('success');
+						outherPlays.attr('disabled', null);
+						$this.addClass("play");
+						this.playing = false;
+						next.exec();
+					};
+				}else{
+					audio.onended = function(){
+						$this.removeClass(iconStop).addClass(iconPlay);
+						$parentTD.removeClass('success');
+						outherPlays.attr('disabled', null);
+						$this.addClass("play");
+						this.playing = false;
+						next();
+					};
+				}
+				audio.onerror = function(){this.onended();};
+				audio.play(limitRepeat);
 			}else{
-				audio.onended = function(){
-					$this.removeClass('glyphicon-stop').addClass('glyphicon-play');
-					$parent.removeClass('success');
-					outherPlays.attr('disabled', null);
-					$this.addClass(myClassPlay);
-					next();
-				};
+				audio.stop();
 			}
-			audio.onerror = function(){this.onended();};
-			audio.loop = !audio.loop;
-			audio.play();
 		});
 	}
-
+		
 	var Next = function(next){
 		var _next = next;
 		this.exec = function(){
@@ -56,8 +64,8 @@ $(function(){
 	};
 
 	var applyNextKey = function(key){
-		$("#play-"+key+"-all").off("click.play").on("click.play", function(){
-			var $plays = $(".play-"+key);
+		$("#play-"+key).off("click.play").on("click.play", function(){
+			var $plays = $(".play[data-key="+key+"]");
 			var $this = $(this);
 			for(var i = 0; i < lastTranslations.length; i++){
 				if (i < lastTranslations.length - 1){
@@ -68,12 +76,14 @@ $(function(){
 						for(var j = 0; j < lastTranslations.length; j++){
 							lastTranslations[j][key].next = null;
 						}
-					$this.attr('disabled',null).removeClass('glyphicon-stop').addClass('glyphicon-play');
+						$this.attr('disabled',null).removeClass(iconStop).addClass(iconPlay);
+						limitRepeat = null;
 					};
 				}
 			}
 			if($plays[0]){
-				$this.attr('disabled','disabled').removeClass('glyphicon-play').addClass('glyphicon-stop');
+				$this.attr('disabled','disabled').removeClass(iconPlay).addClass(iconStop);
+				limitRepeat = 2;
 				$plays[0].click();
 			}
 		});
@@ -85,7 +95,7 @@ $(function(){
 			var $translationPlays = $(".play-translation");
 
 			var $this = $(this);
-			var $originTranslation = $('#play-origin-all, #play-translation-all');
+			var $originTranslation = $('#play-origin, #play-translation');
 			for(var i = 0; i < lastTranslations.length; i++){
 				if (i < lastTranslations.length - 1){
 					var nextTranslation = $translationPlays[i];
@@ -100,14 +110,14 @@ $(function(){
 							lastTranslations[j].origin.next = null;
 							lastTranslations[j].translation.next = null;
 						}
-					$this.attr('disabled',null).removeClass('glyphicon-stop').addClass('glyphicon-play');
-					$originTranslation.attr('disabled',null).removeClass('glyphicon-stop').addClass('glyphicon-play');
+						$this.attr('disabled',null).removeClass(iconStop).addClass(iconPlay);
+						$originTranslation.attr('disabled',null).removeClass(iconStop).addClass(iconPlay);
 					};
 				}
 			}
 			if($originPlays[0]){
-				$this.attr('disabled','disabled').removeClass('glyphicon-play').addClass('glyphicon-stop');
-				$originTranslation.attr('disabled','disabled').removeClass('glyphicon-play').addClass('glyphicon-stop');
+				$this.attr('disabled','disabled').removeClass(iconPlay).addClass(iconStop);
+				$originTranslation.attr('disabled','disabled').removeClass(iconPlay).addClass(iconStop);
 				$originPlays[0].click();
 			}
 		});
@@ -119,7 +129,10 @@ $(function(){
 		if(translations.length > 0){
 			lastTranslations = translations;
 			for(var i = 0; i < lastTranslations.length; i++){
-				$yourVocabularyBody.append('<tr><td data-index="'+i+'" data-key="origin"><h4><button class="btn btn-default glyphicon glyphicon-play play-origin"></button> '+lastTranslations[i].origin.text+'</h4></td><td  data-index="'+i+'" data-key="translation"><h4><button class="btn btn-default glyphicon glyphicon-play play-translation"></button> '+lastTranslations[i].translation.text+'</h4></td><tr>');
+				$yourVocabularyBody.append('<tr><td><h4><button class="btn btn-default glyphicon ' + iconPlay +
+					' play" data-index="' + i + '" data-key="origin"></button> ' + lastTranslations[i].origin.text +
+					'</h4></td><td><h4><button class="btn btn-default glyphicon ' + iconPlay + ' play" data-index="' +
+					i + '" data-key="translation"></button> '+lastTranslations[i].translation.text+'</h4></td><tr>');
 			};
 			applyAudio();
 			applyNextKey('origin');

@@ -12,18 +12,38 @@ $(function(){
 		$(".play-origin, .play-translation").off("click.play").on("click.play", function(){
 			var $this = $(this);
 			var $parent = $this.parent().parent();
+			var index = $parent.data('index');
+			var key = $parent.data('key');
+			var myClassPlay = 'play-'+ key;
+			$this.removeClass(myClassPlay);
+			var outherPlays = $(".play-origin, .play-translation, #play-origin-all, #play-translation-all, #play-all");
+			outherPlays.attr('disabled', 'disabled');
 			$parent.addClass('success');
-			$this.attr('disabled','disabled').removeClass('glyphicon-play').addClass('glyphicon-volume-up');
-			var audio = lastTranslations[$parent.data("index")][$parent.data("key")].audio();
-			var next = lastTranslations[$parent.data("index")][$parent.data("key")].next || function(){};
+			$this.removeClass('glyphicon-play').addClass('glyphicon-stop');
+			if (!(lastTranslations[index][key].audio instanceof HTMLAudioElement)){
+				 lastTranslations[index][key].audio = lastTranslations[index][key].audio();
+			}
+			var audio = lastTranslations[index][key].audio;
+			var next = lastTranslations[index][key].next || function(){};
 			if (next instanceof Next){
-				audio.onended = function(){$this.attr('disabled',null).removeClass('glyphicon-volume-up').addClass('glyphicon-play');$parent.removeClass('success');
-;next.exec();};
+				audio.onended = function(){
+					$this.removeClass('glyphicon-stop').addClass('glyphicon-play');
+					$parent.removeClass('success');
+					outherPlays.attr('disabled', null);
+					$this.addClass(myClassPlay);
+					next.exec();
+				};
 			}else{
-				audio.onended = function(){$this.attr('disabled',null).removeClass('glyphicon-volume-up').addClass('glyphicon-play');$parent.removeClass('success');
-next();};
+				audio.onended = function(){
+					$this.removeClass('glyphicon-stop').addClass('glyphicon-play');
+					$parent.removeClass('success');
+					outherPlays.attr('disabled', null);
+					$this.addClass(myClassPlay);
+					next();
+				};
 			}
 			audio.onerror = function(){this.onended();};
+			audio.loop = !audio.loop;
 			audio.play();
 		});
 	}
@@ -36,7 +56,7 @@ next();};
 	};
 
 	var applyNextKey = function(key){
-		$(".play-"+key+"-all").off("click.play").on("click.play", function(){
+		$("#play-"+key+"-all").off("click.play").on("click.play", function(){
 			var $plays = $(".play-"+key);
 			var $this = $(this);
 			for(var i = 0; i < lastTranslations.length; i++){
@@ -48,24 +68,24 @@ next();};
 						for(var j = 0; j < lastTranslations.length; j++){
 							lastTranslations[j][key].next = null;
 						}
-					$this.attr('disabled',null).removeClass('glyphicon-volume-up').addClass('glyphicon-play');
+					$this.attr('disabled',null).removeClass('glyphicon-stop').addClass('glyphicon-play');
 					};
 				}
 			}
 			if($plays[0]){
-				$this.attr('disabled','disabled').removeClass('glyphicon-play').addClass('glyphicon-volume-up');
+				$this.attr('disabled','disabled').removeClass('glyphicon-play').addClass('glyphicon-stop');
 				$plays[0].click();
 			}
 		});
 	};
 
 	var applyNextAll = function(){
-		$(".play-all").off("click.play").on("click.play", function(){
+		$("#play-all").off("click.play").on("click.play", function(){
 			var $originPlays = $(".play-origin");
 			var $translationPlays = $(".play-translation");
 
 			var $this = $(this);
-			var $originTranslation = $('.play-origin-all, .play-translation-all');
+			var $originTranslation = $('#play-origin-all, #play-translation-all');
 			for(var i = 0; i < lastTranslations.length; i++){
 				if (i < lastTranslations.length - 1){
 					var nextTranslation = $translationPlays[i];
@@ -80,14 +100,14 @@ next();};
 							lastTranslations[j].origin.next = null;
 							lastTranslations[j].translation.next = null;
 						}
-					$this.attr('disabled',null).removeClass('glyphicon-volume-up').addClass('glyphicon-play');
-					$originTranslation.attr('disabled',null).removeClass('glyphicon-volume-up').addClass('glyphicon-play');
+					$this.attr('disabled',null).removeClass('glyphicon-stop').addClass('glyphicon-play');
+					$originTranslation.attr('disabled',null).removeClass('glyphicon-stop').addClass('glyphicon-play');
 					};
 				}
 			}
 			if($originPlays[0]){
-				$this.attr('disabled','disabled').removeClass('glyphicon-play').addClass('glyphicon-volume-up');
-				$originTranslation.attr('disabled','disabled').removeClass('glyphicon-play').addClass('glyphicon-volume-up');
+				$this.attr('disabled','disabled').removeClass('glyphicon-play').addClass('glyphicon-stop');
+				$originTranslation.attr('disabled','disabled').removeClass('glyphicon-play').addClass('glyphicon-stop');
 				$originPlays[0].click();
 			}
 		});

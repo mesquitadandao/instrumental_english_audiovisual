@@ -1,5 +1,5 @@
 $(function(){
-	var $beginNow = $('#begin-now');
+	var $startNow = $('#start-now');
 	var $yourText = $("#your-text");
 	var $yourVocabularyDiv = $("#your-vocabulary-div");
 	var $yourVocabularyBody = $("#your-vocabulary-body");
@@ -24,7 +24,7 @@ $(function(){
 			if(singlePlay){
 				$this.removeClass("play");
 			}
-			var outherPlays = $(".play, #play-origin, #play-translation, #play-all, #begin-now");
+			var outherPlays = $(".play, #play-origin, #play-translation, #play-all, #start-now");
 			outherPlays.attr('disabled', 'disabled');
 			$parentTD.addClass('success');
 			$this.removeClass(iconPlay).addClass(singlePlay?iconStop:iconPlaying);
@@ -146,14 +146,14 @@ $(function(){
 
 	MDTranslator.prototype.completed = function(translations){
 		$progressTranslation.addClass('hidden');
-		$beginNow.attr('disabled', false);
+		$startNow.attr('disabled', false);
 		if(translations.length > 0){
 			lastTranslations = translations;
 			for(var i = 0; i < lastTranslations.length; i++){
-				$yourVocabularyBody.append('<tr><td><h4><button class="btn btn-default glyphicon ' + iconPlay +
+				$yourVocabularyBody.append('<tr><td><h6><button class="btn btn-default btn-sm glyphicon ' + iconPlay +
 					' play" data-index="' + i + '" data-key="origin"></button> ' + lastTranslations[i].origin.text +
-					'</h4></td><td><h4><button class="btn btn-default glyphicon ' + iconPlay + ' play" data-index="' +
-					i + '" data-key="translation"></button> '+lastTranslations[i].translation.text+'</h4></td><tr>');
+					'</h6></td><td><h6><button class="btn btn-default btn-sm glyphicon ' + iconPlay + ' play" data-index="' +
+					i + '" data-key="translation"></button> '+lastTranslations[i].translation.text+'</h6></td><tr>');
 			};
 			applyAudio();
 			applyNextKey('origin');
@@ -171,8 +171,10 @@ $(function(){
 		$("#myModal").modal("hide");
 		$yourVocabularyBody.empty();
 		$progressTranslation.removeClass('hidden');
-		$beginNow.attr('disabled', true);
+		$startNow.attr('disabled', true);
 		var extrateds = $yourText.val().extractUniqueWordsEnglish();
 		MDT.words(extrateds).to("pt");
 	});
+
+	$("input[type=number]").mask("9");
 });

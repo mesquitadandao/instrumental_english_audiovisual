@@ -6,6 +6,7 @@ $(function(){
 	var lastTranslations = [];
 	var limitRepeat = null;
 	var singlePlay = true;
+	var actualAudio = null;
 
 	var $progressTranslation = $("#progress-translation");
 	var $errorTranslation = $("#error-translation");
@@ -57,6 +58,7 @@ $(function(){
 					};
 				}
 				audio.onerror = function(){this.onended();};
+				actualAudio = audio;
 				audio.play(limitRepeat);
 			}else{
 				audio.stop();
@@ -73,30 +75,32 @@ $(function(){
 
 	var applyNextKey = function(key){
 		$("#play-"+key).off("click.play").on("click.play", function(){
-			var $plays = $(".play[data-key="+key+"]");
 			var $this = $(this);
-			for(var i = 0; i < lastTranslations.length; i++){
-				if (i < lastTranslations.length - 1){
+			if(singlePlay){
+				var $plays = $(".play[data-key="+key+"]");
+				for(var i = 0; i < lastTranslations.length - 1; i++){
 					var next = $plays[i+1];
 					lastTranslations[i][key].next = new Next(next);
-				}else{
-					lastTranslations[i][key].next = function(){
-						for(var j = 0; j < lastTranslations.length; j++){
-							lastTranslations[j][key].next = null;
-						}
-						limitRepeat = null;
-						$this.attr("id", "#play-"+key);
-						$this.removeClass(iconStop).addClass(iconPlay);
-						singlePlay = true;
-					};
 				}
-			}
-			if($plays[0]){
-				limitRepeat = $("#play-"+key+"-repeat").val();
-				$this.attr("id", null);
-				$this.removeClass(iconPlay).addClass(iconStop);
-				singlePlay = false;
-				$plays[0].click();
+				var next = $plays[0];
+				lastTranslations[lastTranslations.length - 1][key].next = new Next(next);
+				if($plays[0]){
+					limitRepeat = $("#play-"+key+"-repeat").val();
+					$this.attr("id", null);
+					$this.removeClass(iconPlay).addClass(iconStop);
+					singlePlay = false;
+					$plays[0].click();
+				}
+			}else{
+				for(var i = 0; i < lastTranslations.length; i++){
+					lastTranslations[i][key].next = null;
+				}
+				actualAudio.stop();
+				actualAudio.onended();
+				$this.attr("id", "#play-"+key);
+				$this.removeClass(iconStop).addClass(iconPlay);
+				singlePlay = true;
+				limitRepeat = null;
 			}
 		});
 	};

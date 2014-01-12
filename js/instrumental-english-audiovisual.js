@@ -15,7 +15,7 @@
 var MDTranslator = function(){
 	// http://msdn.microsoft.com/en-us/library/ff512407.aspx
 	var _host = 'http://api.microsofttranslator.com/v2/ajax.svc/TranslateArray2';
-	var _script = 'HOST?appId=APPID&oncomplete=MDT._continue&onerror=MDT._break&texts=TEXTS&from=FROM&to=TO';
+	var _script = '_HOST_?appId=_APPID_&oncomplete=MDT._continue&onerror=MDT._break&texts=_TEXTS_&from=_FROM_&to=_TO_';
 	var _words = [];
 	var _texts = null;
 	var _from = 'en';
@@ -35,8 +35,8 @@ var MDTranslator = function(){
 
 	this.to = function(languageCode){
 		_to = languageCode;
-		var script = _script.gsub(/HOST/, _host).gsub(/APPID/, window._mstConfig.appId).
-		gsub(/TEXTS/, _texts).gsub(/FROM/, _from).gsub(/TO/, _to);
+		var script = _script.gsub(/_HOST_/, _host).gsub(/_APPID_/, window._mstConfig.appId).
+		gsub(/_TEXTS_/, _texts).gsub(/_FROM_/, _from).gsub(/_TO_/, _to);
 		_translating = true;
 		$.getScript(script);
 	};
@@ -68,20 +68,20 @@ var MDTranslator = function(){
 
 Audio.prototype.defaultPlay = Audio.prototype.play;
 Audio.prototype.playing = false;
+Audio.prototype.newPlay = true;
 Audio.prototype.play = function(limitRepeat){
 	if(limitRepeat){
-		if(limitRepeat === 2){
-			this.loop = true;
-			this.onseeked = function(){ this.loop = false; };
-		}else if (limitRepeat > 2){
-			var played = 1;
+		if (limitRepeat > 1){
+			var played = this.newPlay? 2: 1;
 			this.loop = true;
 			this.onseeked = function(){ this.loop = played++ < limitRepeat; };
 		}
 	}else{
 		this.loop = true;
+		this.onseeked = function(){};
 	}
 	this.playing = true;
+	this.newPlay = false;
 	this.defaultPlay();		
 };
 Audio.prototype.stop = function(){
@@ -90,11 +90,11 @@ Audio.prototype.stop = function(){
 
 var MDAudio = function(appID){
 	// http://msdn.microsoft.com/en-us/library/ff512405.aspx
-	var _src = "http://api.microsofttranslator.com/v2/http.svc/Speak?format=audio/mp3&options=MaxQuality&appid=APPID&language=LANGUAGE&text=TEXT";
+	var _src = 'http://api.microsofttranslator.com/v2/http.svc/Speak?format=audio/mp3&options=MaxQuality&appid=_APPID_&language=_LANGUAGE_&text=_TEXT_';
 
 	this.build = function(language, text){
-		return function() { return new Audio(_src.gsub(/APPID/, window._mstConfig.appId).
-			gsub(/LANGUAGE/, language).gsub(/TEXT/, text));};
+		return function() { return new Audio(_src.gsub(/_APPID_/, window._mstConfig.appId).
+			gsub(/_LANGUAGE_/, language).gsub(/_TEXT_/, text));};
 	};
 }
 

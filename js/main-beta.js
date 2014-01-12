@@ -5,12 +5,14 @@ $(function(){
 	var $yourVocabularyBody = $("#your-vocabulary-body");
 	var lastTranslations = [];
 	var limitRepeat = null;
+	var singlePlay = true;
 
 	var $progressTranslation = $("#progress-translation");
 	var $errorTranslation = $("#error-translation");
 
 	var iconPlay = "glyphicon-play";
 	var iconStop = "glyphicon-stop";
+	var iconPlaying = "glyphicon-volume-up";
 
 	var applyAudio = function(){
 		$(".play").off("click.play").on("click.play", function(){
@@ -18,11 +20,13 @@ $(function(){
 			var index = $this.data('index');
 			var key = $this.data('key');
 			var $parentTD = $this.closest("td");
-			$this.removeClass("play");
+			if(singlePlay){
+				$this.removeClass("play");
+			}
 			var outherPlays = $(".play, #play-origin, #play-translation, #play-all");
 			outherPlays.attr('disabled', 'disabled');
 			$parentTD.addClass('success');
-			$this.removeClass(iconPlay).addClass(iconStop);
+			$this.removeClass(iconPlay).addClass(singlePlay?iconStop:iconPlaying);
 			if (!(lastTranslations[index][key].audio instanceof HTMLAudioElement)){
 				lastTranslations[index][key].audio = lastTranslations[index][key].audio();
 			}
@@ -31,19 +35,23 @@ $(function(){
 				var next = lastTranslations[index][key].next || function(){};
 				if (next instanceof Next){
 					audio.onended = function(){
-						$this.removeClass(iconStop).addClass(iconPlay);
+						$this.removeClass(singlePlay?iconStop:iconPlaying).addClass(iconPlay);
 						$parentTD.removeClass('success');
 						outherPlays.attr('disabled', null);
-						$this.addClass("play");
+						if(singlePlay){
+							$this.addClass("play");
+						}
 						this.playing = false;
 						next.exec();
 					};
 				}else{
 					audio.onended = function(){
-						$this.removeClass(iconStop).addClass(iconPlay);
+						$this.removeClass(singlePlay?iconStop:iconPlaying).addClass(iconPlay);
 						$parentTD.removeClass('success');
 						outherPlays.attr('disabled', null);
-						$this.addClass("play");
+						if(singlePlay){
+							$this.addClass("play");
+						}
 						this.playing = false;
 						next();
 					};
@@ -76,14 +84,18 @@ $(function(){
 						for(var j = 0; j < lastTranslations.length; j++){
 							lastTranslations[j][key].next = null;
 						}
-						$this.attr('disabled',null).removeClass(iconStop).addClass(iconPlay);
 						limitRepeat = null;
+						$this.attr("id", "#play-"+key);
+						$this.removeClass(iconStop).addClass(iconPlay);
+						singlePlay = true;
 					};
 				}
 			}
 			if($plays[0]){
-				$this.attr('disabled','disabled').removeClass(iconPlay).addClass(iconStop);
-				limitRepeat = 2;
+				limitRepeat = $("#play-"+key+"-repeat").val();
+				$this.attr("id", null);
+				$this.removeClass(iconPlay).addClass(iconStop);
+				singlePlay = false;
 				$plays[0].click();
 			}
 		});

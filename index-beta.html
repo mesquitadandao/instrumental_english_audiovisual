@@ -47,13 +47,66 @@
 							<h4 class="modal-title" id="myModalLabel">Start Now</h4>
 						</div>
 						<div class="modal-body">
-							<label for="your-text">Select your language:</label>
-							<label for="your-text">Type a English Text:</label>
-							<textarea id="your-text" class="form-control" rows="10" required></textarea>
+							<div class="form-group">
+								<label class="control-label" for="your-language">Select Your Language:</label>
+						  	<div class="input-group">
+						    	<input id="your-language" type="text" class="form-control" readonly>
+						      <div class="input-group-btn">
+						        <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown"><span class="caret"></span></button>
+						        <div class="dropdown-menu">
+						        	<button data-code="ar" type="button" class="btn btn-default pull-left language">Arabic</button>
+						        	<button data-code="bg" type="button" class="btn btn-default pull-left language">Bulgarian</button>
+						        	<button data-code="ca" type="button" class="btn btn-default pull-left language">Catalan</button>
+						        	<button data-code="zh-CHS" type="button" class="btn btn-default pull-left language">Chinese (Simplified)</button>
+						        	<button data-code="zh-CHT" type="button" class="btn btn-default pull-left language">Chinese (Traditional)</button>
+						        	<button data-code="cs" type="button" class="btn btn-default pull-left language">Czech</button>
+						        	<button data-code="da" type="button" class="btn btn-default pull-left language">Danish</button>
+						        	<button data-code="nl" type="button" class="btn btn-default pull-left language">Dutch</button>
+						        	<button data-code="en" type="button" class="btn btn-default pull-left language">English</button>
+						        	<button data-code="et" type="button" class="btn btn-default pull-left language">Estonian</button>
+						        	<button data-code="fa" type="button" class="btn btn-default pull-left language">Persian (Farsi)</button>
+						        	<button data-code="fi" type="button" class="btn btn-default pull-left language">Finnish</button>
+						        	<button data-code="fr" type="button" class="btn btn-default pull-left language">French</button>
+						        	<button data-code="de" type="button" class="btn btn-default pull-left language">German</button>
+						        	<button data-code="el" type="button" class="btn btn-default pull-left language">Greek</button>
+						        	<button data-code="ht" type="button" class="btn btn-default pull-left language">Haitian Creole</button>
+						        	<button data-code="he" type="button" class="btn btn-default pull-left language">Hebrew</button>
+						        	<button data-code="hi" type="button" class="btn btn-default pull-left language">Hindi</button>
+						        	<button data-code="hu" type="button" class="btn btn-default pull-left language">Hungarian</button>
+						        	<button data-code="id" type="button" class="btn btn-default pull-left language">Indonesian</button>
+						        	<button data-code="it" type="button" class="btn btn-default pull-left language">Italian</button>
+						        	<button data-code="ja" type="button" class="btn btn-default pull-left language">Japanese</button>
+						        	<button data-code="ko" type="button" class="btn btn-default pull-left language">Korean</button>
+						        	<button data-code="lv" type="button" class="btn btn-default pull-left language">Latvian</button>
+						        	<button data-code="lt" type="button" class="btn btn-default pull-left language">Lithuanian</button>
+						        	<button data-code="ms" type="button" class="btn btn-default pull-left language">Malay</button>
+						        	<button data-code="mww" type="button" class="btn btn-default pull-left language">Hmong Daw</button>
+						        	<button data-code="no" type="button" class="btn btn-default pull-left language">Norwegian</button>
+						        	<button data-code="pl" type="button" class="btn btn-default pull-left language">Polish</button>
+						        	<button data-code="pt" type="button" class="btn btn-default pull-left language">Portuguese</button>
+						        	<button data-code="ro" type="button" class="btn btn-default pull-left language">Romanian</button>
+						        	<button data-code="ru" type="button" class="btn btn-default pull-left language">Russian</button>
+						        	<button data-code="sk" type="button" class="btn btn-default pull-left language">Slovak</button>
+						        	<button data-code="sl" type="button" class="btn btn-default pull-left language">Slovenian</button>
+						        	<button data-code="es" type="button" class="btn btn-default pull-left language">Spanish</button>
+						        	<button data-code="sv" type="button" class="btn btn-default pull-left language">Swedish</button>
+						        	<button data-code="th" type="button" class="btn btn-default pull-left language">Thai</button>
+						        	<button data-code="tr" type="button" class="btn btn-default pull-left language">Turkish</button>
+						        	<button data-code="uk" type="button" class="btn btn-default pull-left language">Ukrainian</button>
+						        	<button data-code="ur" type="button" class="btn btn-default pull-left language">Urdu</button>
+						        	<button data-code="vi" type="button" class="btn btn-default pull-left language">Vietnamese </button>
+						        </div>
+						      </div>
+						    </div>
+						  </div>
+						  <div class="form-group">
+									<label class="control-label" for="your-text">Type a English Text:</label>
+									<textarea id="your-text" class="form-control" rows="10" required></textarea>
+								</div>
 						</div>
 						<div class="modal-footer">
 							<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-							<button class="btn btn-primary">Generate Specific Vocabulary.</button>
+							<button class="btn btn-primary">Generate Specific Vocabulary</button>
 						</div>
 					</div>
 				</div>
@@ -63,11 +116,11 @@
 
 	<div id="your-vocabulary-div" class="container">
 		<table class="table table-responsive table-hover">
-			<caption><h6><button id="play-all" class="btn btn-default btn-sm glyphicon glyphicon-play"></button><input type="number" id="play-all-repeat" value="1" size="2" class="input-xs"> time Your Vocabulary</h6></caption>
+			<caption><h6><button id="play-all" class="btn btn-default btn-sm glyphicon glyphicon-play"></button><input type="number" id="play-all-repeat" value="2" size="2" class="input-xs"> time Your Vocabulary</h6></caption>
 			<thead>
 				<tr>
-					<th><h6><button id="play-origin" class="btn btn-default btn-sm glyphicon glyphicon-play"></button><input type="number" id="play-origin-repeat" value="1" size="2" class="input-xs"> time Original</h6></th>
-					<th><h6><button id="play-translation" class="btn btn-default btn-sm glyphicon glyphicon-play"></button><input type="number" id="play-translation-repeat" value="1" size="2" class="input-xs"> time Translation</h6></th>
+					<th><h6><button id="play-origin" class="btn btn-default btn-sm glyphicon glyphicon-play"></button><input type="number" id="play-origin-repeat" value="2" size="2" class="input-xs"> time Original</h6></th>
+					<th><h6><button id="play-translation" class="btn btn-default btn-sm glyphicon glyphicon-play"></button><input type="number" id="play-translation-repeat" value="2" size="2" class="input-xs"> time Translation</h6></th>
 				</tr>
 			</thead>
 			<tbody translate="no" id="your-vocabulary-body">
@@ -91,7 +144,6 @@
 		<p>&copy; 2014 <a translate="no" class="change-element" target="_blank" href="http://mesquitadandao.github.io/">Mesquita Dandão</a>. &middot; <a translate="no" href="http://choosealicense.com/licenses/unlicense/">Public Domain (Unlicense)</a> &middot; Published with <a translate="no" class="change-element" target="_blank" href="http://pages.github.com">GitHub Pages</a></p>
 	</footer>
 
-
 	<script type="text/javascript">
 	var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");
 	document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));
@@ -104,6 +156,7 @@
 	</script>
 
 	<script src="js/jquery-1.10.2.min.js"></script>
+	<script src="js/typeahead.min.js"></script>
 	<script src="js/bootstrap.min.js"></script>
 	<script src="js/jquery.maskedinput.min.js"></script>
 	<script src="js/md-simple-javascript-1.2.2.min.js" type="text/javascript"></script>

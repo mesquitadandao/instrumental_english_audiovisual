@@ -1,6 +1,7 @@
 $(function(){
 	var $startNow = $('#start-now');
 	var $yourText = $("#your-text");
+	var $yourLanguage = $("#your-language");
 	var $yourVocabularyDiv = $("#your-vocabulary-div");
 	var $yourVocabularyBody = $("#your-vocabulary-body");
 	var lastTranslations = [];
@@ -173,8 +174,19 @@ $(function(){
 		$progressTranslation.removeClass('hidden');
 		$startNow.attr('disabled', true);
 		var extrateds = $yourText.val().extractUniqueWordsEnglish();
-		MDT.words(extrateds).to("pt");
+		MDT.words(extrateds).to($yourLanguage.data("selected").data("code"));
 	});
 
 	$("input[type=number]").mask("9");
+
+	$(".language").on("click", function(){
+		var $this = $(this);
+		var $selected = $yourLanguage.data("selected");
+		$yourLanguage.data('selected', $this);
+		$this.addClass("hidden");
+		if($selected){
+			$selected.removeClass("hidden");
+		}
+		$yourLanguage.val($(this).text());
+	});
 });

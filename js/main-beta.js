@@ -24,7 +24,7 @@ $(function(){
 			if(singlePlay){
 				$this.removeClass("play");
 			}
-			var outherPlays = $(".play, #play-origin, #play-translation, #play-all");
+			var outherPlays = $(".play, #play-origin, #play-translation, #play-all, #begin-now");
 			outherPlays.attr('disabled', 'disabled');
 			$parentTD.addClass('success');
 			$this.removeClass(iconPlay).addClass(singlePlay?iconStop:iconPlaying);
@@ -95,10 +95,10 @@ $(function(){
 				for(var i = 0; i < lastTranslations.length; i++){
 					lastTranslations[i][key].next = null;
 				}
+				$this.attr("id", "play-"+key);
+				$this.removeClass(iconStop).addClass(iconPlay);
 				actualAudio.stop();
 				actualAudio.onended();
-				$this.attr("id", "#play-"+key);
-				$this.removeClass(iconStop).addClass(iconPlay);
 				singlePlay = true;
 				limitRepeat = null;
 			}
@@ -134,10 +134,10 @@ $(function(){
 					lastTranslations[i].origin.next = null;
 					lastTranslations[i].translation.next = null;
 				}
+				$this.attr("id", "play-all");
+				$this.removeClass(iconStop).addClass(iconPlay);
 				actualAudio.stop();
 				actualAudio.onended();
-				$this.attr("id", "#play-all");
-				$this.removeClass(iconStop).addClass(iconPlay);
 				singlePlay = true;
 				limitRepeat = null;
 			}

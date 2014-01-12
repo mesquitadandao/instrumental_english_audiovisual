@@ -107,34 +107,39 @@ $(function(){
 
 	var applyNextAll = function(){
 		$("#play-all").off("click.play").on("click.play", function(){
-			var $originPlays = $(".play-origin");
-			var $translationPlays = $(".play-translation");
-
 			var $this = $(this);
-			var $originTranslation = $('#play-origin, #play-translation');
-			for(var i = 0; i < lastTranslations.length; i++){
-				if (i < lastTranslations.length - 1){
+			if(singlePlay){
+				var $originPlays = $(".play[data-key=origin]");
+				var $translationPlays = $(".play[data-key=translation]");
+				var $originTranslation = $('#play-origin, #play-translation');
+				for(var i = 0; i < lastTranslations.length - 1; i++){
 					var nextTranslation = $translationPlays[i];
 					lastTranslations[i].origin.next = new Next(nextTranslation);
 					var nextOrigin = $originPlays[i+1];
 					lastTranslations[i].translation.next = new Next(nextOrigin);
-				}else{
-					var nextTranslation = $translationPlays[i];
-					lastTranslations[i].origin.next = new Next(nextTranslation);
-					lastTranslations[i].translation.next = function(){
-						for(var j = 0; j < lastTranslations.length; j++){
-							lastTranslations[j].origin.next = null;
-							lastTranslations[j].translation.next = null;
-						}
-						$this.attr('disabled',null).removeClass(iconStop).addClass(iconPlay);
-						$originTranslation.attr('disabled',null).removeClass(iconStop).addClass(iconPlay);
-					};
 				}
-			}
-			if($originPlays[0]){
-				$this.attr('disabled','disabled').removeClass(iconPlay).addClass(iconStop);
-				$originTranslation.attr('disabled','disabled').removeClass(iconPlay).addClass(iconStop);
-				$originPlays[0].click();
+				var nextTranslation = $translationPlays[lastTranslations.length-1];
+				lastTranslations[lastTranslations.length-1].origin.next = new Next(nextTranslation);
+				var nextOrigin = $originPlays[0];
+				lastTranslations[lastTranslations.length-1].translation.next = new Next(nextOrigin);
+				if($originPlays[0]){
+					limitRepeat = $("#play-all-repeat").val();
+					$this.attr("id", null);
+					$this.removeClass(iconPlay).addClass(iconStop);
+					singlePlay = false;
+					$originPlays[0].click();
+				}
+			}else{
+				for(var i = 0; i < lastTranslations.length; i++){
+					lastTranslations[i].origin.next = null;
+					lastTranslations[i].translation.next = null;
+				}
+				actualAudio.stop();
+				actualAudio.onended();
+				$this.attr("id", "#play-all");
+				$this.removeClass(iconStop).addClass(iconPlay);
+				singlePlay = true;
+				limitRepeat = null;
 			}
 		});
 	};

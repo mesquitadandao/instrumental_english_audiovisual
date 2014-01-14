@@ -89,12 +89,12 @@ Audio.prototype.stop = function(){
 };
 
 var MDAudio = function(appID){
-	var _src = 'http://translate.google.com/translate_tts?ie=UTF-8&q=_TEXT_&tl=_LANGUAGE_';
+// http://msdn.microsoft.com/en-us/library/ff512405.aspx
+  var _src = 'http://api.microsofttranslator.com/v2/http.svc/Speak?format=audio/mp3&options=MaxQuality&appid=_APPID_&language=_LANGUAGE_&text=_TEXT_';
 
 	this.build = function(language, text){
-		return function() { return new Audio(_src.
-			gsub(/_LANGUAGE_/, language.gsub(/zh-CHS/, "zh-CN").gsub(/zh-CHT/, "zh-TW")).gsub(/_TEXT_/, text));};
-	};
+    return function() { return new Audio(_src.gsub(/_APPID_/, window._mstConfig.appId).
+    	gsub(/_LANGUAGE_/, language).gsub(/_TEXT_/, text));};	};
 }
 
 //$.getScript('http://www.microsofttranslator.com/Ajax/V2/Toolkit.ashx');

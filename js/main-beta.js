@@ -189,4 +189,6 @@ $(function(){
 		}
 		$yourLanguage.val($(this).text());
 	});
+
+	$(".language")[0].click();
 });

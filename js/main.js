@@ -4,6 +4,7 @@ $(function(){
 	var $yourLanguage = $("#your-language");
 	var $yourVocabularyDiv = $("#your-vocabulary-div");
 	var $yourVocabularyBody = $("#your-vocabulary-body");
+	var $to = $("#to");
 	var lastTranslations = [];
 	var limitRepeat = null;
 	var singlePlay = true;
@@ -188,7 +189,8 @@ $(function(){
 			$selected.removeClass("hidden");
 		}
 		$yourLanguage.val($(this).text());
+		$to.text($(this).text());
 	});
 
-	$(".language")[0].click();
+	$(".language[data-code=pt]")[0].click();
 });

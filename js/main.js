@@ -4,6 +4,7 @@ $(function(){
 	var $yourLanguage = $("#your-language");
 	var $yourVocabularyDiv = $("#your-vocabulary-div");
 	var $yourVocabularyBody = $("#your-vocabulary-body");
+	var $to = $("#to");
 	var lastTranslations = [];
 	var limitRepeat = null;
 	var singlePlay = true;
@@ -188,7 +189,16 @@ $(function(){
 			$selected.removeClass("hidden");
 		}
 		$yourLanguage.val($(this).text());
+		$to.text($(this).text());
 	});
 
-	$(".language")[0].click();
+	var widget = 'http://www.microsofttranslator.com';
+	if(location && location.href && location.href.indexOf('https') == 0){
+	widget ='https://ssl.microsofttranslator.com';
+	}
+	widget += '/ajax/v3/WidgetV3.ashx?siteData=ueOIGRSKkd965FeEGM5JtQ**&ctf=False&ui=true&settings=Auto&from=en';
+	$.getScript(widget, function(){
+		$(".language[data-code=pt]")[0].click();
+		$("#start-now").attr("disabled", null);
+	});
 });

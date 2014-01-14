@@ -88,15 +88,15 @@ Audio.prototype.stop = function(){
 	this.loop = false;
 };
 
-var MDAudio = function(appID){
+var MDAudio = function(){
 // http://msdn.microsoft.com/en-us/library/ff512405.aspx
-  var _src = 'http://api.microsofttranslator.com/v2/http.svc/Speak?format=audio/mp3&options=MaxQuality&appid=_APPID_&language=_LANGUAGE_&text=_TEXT_';
+	var _src = 'http://api.microsofttranslator.com/v2/http.svc/Speak?format=audio/mp3&options=MaxQuality&appid=_APPID_&language=_LANGUAGE_&text=_TEXT_';
 
 	this.build = function(language, text){
-    return function() { return new Audio(_src.gsub(/_APPID_/, window._mstConfig.appId).
-    	gsub(/_LANGUAGE_/, language).gsub(/_TEXT_/, text));};	};
+		return function() { return new Audio(_src.gsub(/_APPID_/, window._mstConfig.appId).
+			gsub(/_LANGUAGE_/, language).gsub(/_TEXT_/, text));};	};
 }
 
 //$.getScript('http://www.microsofttranslator.com/Ajax/V2/Toolkit.ashx');
 var MDT = new MDTranslator();
-var MDA = new MDAudio(MDT.appID);
+var MDA = new MDAudio();

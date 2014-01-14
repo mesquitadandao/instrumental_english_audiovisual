@@ -11,6 +11,7 @@ module('MDTranslator');
 
 test('return Array [{"origin":{"text":"i","audio":function(){return new MDAudio("i","en");}},"translation":{"text":"eu","audio":function(){return new MDAudio("eu","pt");}}},'+
 	'{"origin":{"text":"you","audio":function(){return new MDAudio("you","en");}},"translation":{"text":"você","audio":function(){return new MDAudio("você","pt");}}}].', function() {
+		
 	var expected = [{"origin":{"text":"i","audio":function(){return MDA.build("en",'i');}},"translation":{"text":"eu","audio":function(){return new MDA.build("pt","eu");}}},
 									{"origin":{"text":"you","audio":function(){return new MDA.build("en","you");}},"translation":{"text":"você","audio":function(){return new MDA.build("pt","você");}}}];
 	var translateds = [];

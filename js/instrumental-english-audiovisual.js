@@ -69,6 +69,7 @@ var MDTranslator = function(){
 Audio.prototype.defaultPlay = Audio.prototype.play;
 Audio.prototype.playing = false;
 Audio.prototype.newPlay = true;
+Audio.prototype.hasError = false;
 Audio.prototype.play = function(limitRepeat){
 	if(limitRepeat){
 		if (limitRepeat > 1){
@@ -82,7 +83,11 @@ Audio.prototype.play = function(limitRepeat){
 	}
 	this.playing = true;
 	this.newPlay = false;
-	this.defaultPlay();		
+	if(this.hasError){
+		this.onerror();
+	}else{
+		this.defaultPlay();		
+	}
 };
 Audio.prototype.stop = function(){
 	this.loop = false;

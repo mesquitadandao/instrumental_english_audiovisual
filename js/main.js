@@ -59,7 +59,7 @@ $(function(){
 						next();
 					};
 				}
-				audio.onerror = function(){this.onended();};
+				audio.onerror = function(){this.hasError = true;$parentTD.addClass("danger");this.onended();};
 				actualAudio = audio;
 				audio.play(limitRepeat);
 			}else{
@@ -162,6 +162,7 @@ $(function(){
 			applyNextKey('translation');
 			applyNextAll();
 			$yourText.val("");
+			location.hash = '#to';
 		}else{
 			var $errorTranslationClone = $errorTranslation.clone();
 			$errorTranslationClone.removeClass('hidden');
